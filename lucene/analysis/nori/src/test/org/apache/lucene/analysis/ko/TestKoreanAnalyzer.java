@@ -106,4 +106,117 @@ public class TestKoreanAnalyzer extends BaseTokenStreamTestCase {
         new int[]{1, 1, 1}
     );
   }
+
+  public void testXPN() throws IOException {
+    Set<POS.Tag> stopTags = Arrays.asList(POS.Tag.E, POS.Tag.J, POS.Tag.VCN, POS.Tag.VCP).stream().collect(Collectors.toSet());
+
+    Analyzer a = new KoreanAnalyzer(null, KoreanTokenizer.DecompoundMode.DISCARD,
+        stopTags, false);
+    assertAnalyzesTo(a, "불평등",
+        new String[]{"불평등"},
+        new int[]{ 0},
+        new int[]{ 3},
+        new int[]{ 1}
+    );
+
+    assertAnalyzesTo(a, "맏아들",
+        new String[]{"맏아들"},
+        new int[]{ 0},
+        new int[]{ 3},
+        new int[]{ 1}
+    );
+    assertAnalyzesTo(a, "풋사과",
+        new String[]{"풋", "사과"},
+        new int[]{ 0, 1},
+        new int[]{ 1, 3},
+        new int[]{ 1, 1}
+    );
+
+    assertAnalyzesTo(a, "풋사랑",
+        new String[]{"풋사랑"},
+        new int[]{ 0},
+        new int[]{ 3},
+        new int[]{ 1}
+    );
+
+    a.close();
+  }
+
+  public void testXSN() throws IOException {
+
+    Set<POS.Tag> stopTags = Arrays.asList(POS.Tag.E, POS.Tag.J, POS.Tag.VCN, POS.Tag.VCP).stream().collect(Collectors.toSet());
+
+    Analyzer a = new KoreanAnalyzer(null, KoreanTokenizer.DecompoundMode.DISCARD,
+        stopTags, false);
+    assertAnalyzesTo(a, "환상적",
+        new String[]{"환상적"},
+        new int[]{ 0},
+        new int[]{ 3},
+        new int[]{ 1}
+    );
+    assertAnalyzesTo(a, "부채질",
+        new String[]{"부채질"},
+        new int[]{ 0},
+        new int[]{ 3},
+        new int[]{ 1}
+    );
+    assertAnalyzesTo(a, "사냥꾼",
+        new String[]{"사냥꾼"},
+        new int[]{ 0},
+        new int[]{ 3},
+        new int[]{ 1}
+    );
+    assertAnalyzesTo(a, "선생님",
+        new String[]{"선생님"},
+        new int[]{ 0},
+        new int[]{ 3},
+        new int[]{ 1}
+    );
+    a.close();
+  }
+
+
+  public void testPunctuation() throws IOException {
+
+    Set<POS.Tag> stopTags = Arrays.asList(POS.Tag.E, POS.Tag.J, POS.Tag.VCN, POS.Tag.VCP).stream().collect(Collectors.toSet());
+
+    Analyzer a = new KoreanAnalyzer(null, KoreanTokenizer.DecompoundMode.DISCARD,
+        stopTags, false);
+    assertAnalyzesTo(a, "mom's",
+        new String[]{"mom's"},
+        new int[]{ 0},
+        new int[]{ 5},
+        new int[]{ 1}
+    );
+
+
+    assertAnalyzesTo(a, "Thai&",
+        new String[]{"thai&"},
+        new int[]{ 0},
+        new int[]{ 5},
+        new int[]{ 1}
+    );
+
+    assertAnalyzesTo(a, "Thai%",
+        new String[]{"thai%"},
+        new int[]{ 0},
+        new int[]{ 5},
+        new int[]{ 1}
+    );
+//
+//    assertAnalyzesTo(a, "Thai+",
+//        new String[]{"thai+"},
+//        new int[]{ 0},
+//        new int[]{ 5},
+//        new int[]{ 1}
+//    );
+
+    assertAnalyzesTo(a, "Thai,",
+        new String[]{"thai,"},
+        new int[]{ 0},
+        new int[]{ 5},
+        new int[]{ 1}
+    );
+    a.close();
+  }
 }

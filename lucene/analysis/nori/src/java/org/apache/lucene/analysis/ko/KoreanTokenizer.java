@@ -844,6 +844,7 @@ public final class KoreanTokenizer extends Tokenizer {
 
     int pos = endPos;
     int bestIDX = fromIDX;
+    int lastBackId=0;
 
     // TODO: sort of silly to make Token instances here; the
     // back trace has all info needed to generate the
@@ -906,8 +907,30 @@ public final class KoreanTokenizer extends Tokenizer {
         );
         if (token.getPOSType() == POS.Type.MORPHEME || mode == DecompoundMode.NONE) {
           if (shouldFilterToken(token) == false) {
-            pending.add(token);
-            if (VERBOSE) {
+            final DictionaryToken newToken;
+
+            if(pending.size() > 0){
+              if((token.getLeftPOS() == POS.Tag.XPN && pending.get(pending.size()-1).getLeftPOS() == POS.Tag.NNG)
+                  || (token.getLeftPOS() == POS.Tag.NNG && pending.get(pending.size()-1).getLeftPOS() == POS.Tag.XSN)){
+
+                Token lastToken = pending.remove(pending.size()-1);
+                newToken = new DictionaryToken(backType,
+                    dict,
+                    lastBackId==0?backID:lastBackId,
+                    fragment,
+                    fragmentOffset,
+                    length+lastToken.getLength(),
+                    backWordPos,
+                    backWordPos + length+lastToken.getLength()
+                );
+                pending.add(newToken);
+              }
+            } else if(token.getLeftPOS() == POS.Tag.NNG || token.getLeftPOS() == POS.Tag.XSN) {
+              lastBackId = backID;
+              pending.add(token);
+            }else {
+              pending.add(token);
+            }            if (VERBOSE) {
               System.out.println("    add token=" + pending.get(pending.size() - 1));
             }
           }
