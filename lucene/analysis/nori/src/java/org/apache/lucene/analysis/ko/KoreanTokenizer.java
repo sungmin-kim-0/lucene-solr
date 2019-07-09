@@ -1005,8 +1005,8 @@ public final class KoreanTokenizer extends Tokenizer {
       case Character.START_PUNCTUATION:
       case Character.END_PUNCTUATION:
       case Character.CONNECTOR_PUNCTUATION:
-      case Character.OTHER_PUNCTUATION:
-      case Character.MATH_SYMBOL:
+      //case Character.OTHER_PUNCTUATION:
+      //case Character.MATH_SYMBOL:
       case Character.CURRENCY_SYMBOL:
       case Character.MODIFIER_SYMBOL:
       case Character.OTHER_SYMBOL:
